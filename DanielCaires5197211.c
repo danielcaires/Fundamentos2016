@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void escreve_pixel(FILE *fp){
+	fprintf(fp,"255 0 0 ");
+}
+
 int main(){
 	/*declara as variaveis*/
   int teste, itmax, linhas, colunas, i, j;
@@ -18,7 +22,7 @@ int main(){
   /*itera a região do dominio a ser estudada*/
   for(i=0;i<linhas;i++){
   	for(j=0;j<colunas;j++){
-  		fprintf(arquivo,"255 0 0 ");
+  		escreve_pixel(arquivo);
   	}
   	printf("\n");
   }

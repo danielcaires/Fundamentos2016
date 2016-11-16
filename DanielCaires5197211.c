@@ -1,15 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 void escreve_pixel(FILE *fp){
 	fprintf(fp,"255 0 0 ");
 }
+
+float derivada_numerica(float fsoma, float fdif, float h){
+	/*recebe f(x+h), f(x-h) e h, respectivamente. E retorna a aproximacao da derivada de f em x*/
+	float derivada;
+	printf("%f \n",fsoma);
+	derivada = (fsoma-fdif)/(2*h);
+
+	return(derivada);
+}
+
+float distancia(float x1, float y1, float x2, float y2){
+	float resultado;
+	resultado = sqrt(pow((x1-x2),2)+pow((y1-y2),2));
+
+	return(resultado);
+}
+
+
 
 int main(){
 	/*declara as variaveis*/
   int teste, itmax, linhas, colunas, i, j;
   float a, b, c, d, h, epsilon;
   FILE * arquivo;
+  double varteste;
 
   /*le o arquivo e preenche as variaveis*/
   arquivo = fopen("entrada.txt","r");
@@ -27,8 +47,10 @@ int main(){
   	printf("\n");
   }
 
+  varteste = distancia(0,0,3,4);
+
   fclose(arquivo);
-  printf("Finalizado, %d \n", colunas);
+  printf("Finalizado, %f \n", varteste);
 
   return(0);
 }

@@ -16,12 +16,20 @@ float derivada_numerica(float fsoma, float fdif, float h){
 }
 
 float distancia(float x1, float y1, float x2, float y2){
+	/*Retorna a distancia entre os pontos (x1,y1) e (x2,y2)*/
 	float resultado;
 	resultado = sqrt(pow((x1-x2),2)+pow((y1-y2),2));
 
 	return(resultado);
 }
 
+float determinante_22(float matriz[2][2]){
+	/*Retorna o determinante de uma matriz 2x2*/
+	float determinante;
+	determinante = (matriz[0][0]*matriz[1][1])-(matriz[0][1]*matriz[1][0]);
+
+	return(determinante);
+}
 
 
 int main(){
@@ -30,6 +38,7 @@ int main(){
   float a, b, c, d, h, epsilon;
   FILE * arquivo;
   double varteste;
+  float matriz[2][2] = {2,0,0,3};
 
   /*le o arquivo e preenche as variaveis*/
   arquivo = fopen("entrada.txt","r");
@@ -47,7 +56,8 @@ int main(){
   	printf("\n");
   }
 
-  varteste = distancia(0,0,3,4);
+  /*Teste das funcoes - ATENCAO - apagar*/
+  varteste = determinante_22(matriz);
 
   fclose(arquivo);
   printf("Finalizado, %f \n", varteste);

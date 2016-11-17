@@ -31,14 +31,29 @@ float determinante_22(float matriz[2][2]){
 	return(determinante);
 }
 
+int inverte_22(float matriz [2][2], float inversa[2][2]){
+	/*recebe uma matriz 2x2 e atribui sua inversa ao segundo parametro*/
+	float determinante;
+
+	determinante = determinante_22(matriz);
+	if(determinante!=0){
+		inversa[0][0] = (matriz[1][1])/determinante;
+		inversa[1][1] = (matriz[0][0])/determinante;
+		inversa[0][1] = (-1*(matriz[0][1]))/determinante;
+		inversa[1][0] = (-1*(matriz[1][0]))/determinante;
+		return(1);
+	} else {
+		return(0);
+	}
+}
 
 int main(){
 	/*declara as variaveis*/
   int teste, itmax, linhas, colunas, i, j;
   float a, b, c, d, h, epsilon;
   FILE * arquivo;
-  double varteste;
-  float matriz[2][2] = {2,0,0,3};
+  float varteste[2][2];
+  float matriz[2][2] = {1,0,0,2};
 
   /*le o arquivo e preenche as variaveis*/
   arquivo = fopen("entrada.txt","r");
@@ -51,16 +66,21 @@ int main(){
   /*itera a região do dominio a ser estudada*/
   for(i=0;i<linhas;i++){
   	for(j=0;j<colunas;j++){
-  		escreve_pixel(arquivo);
+  		if(i==0){
+ 				fprintf(arquivo,"255 255 255 ");
+  		} else {
+  			fprintf(arquivo,"255 0 0 ");
+  		}
   	}
-  	printf("\n");
   }
 
   /*Teste das funcoes - ATENCAO - apagar*/
-  varteste = determinante_22(matriz);
+  inverte_22(matriz, varteste);
 
   fclose(arquivo);
-  printf("Finalizado, %f \n", varteste);
+  //printf("Finalizado, %f \n", varteste);
+  printf("[ %f  %f ] \n", varteste[0][0], varteste[0][1]);
+  printf("[ %f  %f ] \n", varteste[1][0], varteste[1][1]);
 
   return(0);
 }

@@ -2,29 +2,39 @@
 #include <stdlib.h>
 #include <math.h>
 
-float f1(x,y){
+
+float f1(float x, float y){
 	return (pow(x,3)-3*x*pow(y,2)-1);
 }
-float g1(x,y){
+float g1(float x, float y){
 	return (3*pow(x,2)*y-pow(y,3));
 }
-float f2(x,y){
+float f2(float x, float y){
 	return (pow(x,4)-6*pow(x,2)*pow(y,2)+pow(y,4)-1);
 }
-float g2(x,y){
+float g2(float x, float y){
 	return (4*pow(x,3)*y-4*x*pow(y,3));
 }
-float f3(x,y){
+float f3(float x, float y){
 	return (cos(3*pow(x,2))*y);
 }
-float g3(x,y){
+float g3(float x, float y){
 	return (cos(3*pow(y,2))*x);
+}
+float fxy(float x, float y, int teste){
+	if(teste == 1){return(f1(x,y));}
+	if(teste == 2){return(f2(x,y));}
+	if(teste == 3){return(f3(x,y));}
+}
+float gxy(float x, float y, int teste){
+	if(teste == 1){return(g1(x,y));}
+	if(teste == 2){return(g2(x,y));}
+	if(teste == 3){return(g3(x,y));}
 }
 
 float derivada_numerica(float fsoma, float fdif, float h){
 	/*recebe f(x+h), f(x-h) e h, respectivamente. E retorna a aproximacao da derivada de f em x*/
 	float derivada;
-	printf("%f \n",fsoma);
 	derivada = (fsoma-fdif)/(2*h);
 
 	return(derivada);
@@ -62,6 +72,26 @@ int inverte_22(float matriz [2][2], float inversa[2][2]){
 	}
 }
 
+int proximo_ponto(int teste, float h, float xk, float yk, float *xl, float *yl){
+	float matriz[2][2], inversa[2][2];
+
+	matriz[0][0] = derivada_numerica(fxy(xk+h, yk, teste), fxy(xk-h, yk, teste), h);
+	matriz[0][1] = derivada_numerica(fxy(xk, yk+h, teste), fxy(xk, yk-h, teste), h);
+	matriz[1][0] = derivada_numerica(gxy(xk+h, yk, teste), gxy(xk-h, yk, teste), h);
+	matriz[1][1] = derivada_numerica(gxy(xk, yk+h, teste), gxy(xk, yk-h, teste), h);
+
+	if(inverte_22(matriz,inversa)){
+		*xl = xk-(inversa[0][0]*fxy(xk, yk, teste)-inversa[0][1]*gxy(xk, yk, teste));
+		*yl = yk-(inversa[1][0]*fxy(xk, yk, teste)-inversa[1][1]*gxy(xk, yk, teste));
+
+		return(1);
+	} else {
+		return(0);
+	}
+	
+
+}
+
 int main(){
 	/*declara as variaveis*/
   int teste, itmax, linhas, colunas, i, j;
@@ -74,6 +104,7 @@ int main(){
   int indice;
   float xk, yk, xl, yl;
   float passox, passoy;
+  int retorno;
 
 
   /*le o arquivo e preenche as variaveis*/
@@ -95,10 +126,9 @@ int main(){
   }
   
   fclose(arquivo)*/
-  xk = cos(0);
-  yk = g3(7,0);
-
-  printf("%f \n%f \n", xk, yk);
+ 	retorno = proximo_ponto(teste, h, a, d, &xl, &yl);
+ 
+  printf("%f \n%f \n", xl, yl);
 
   return(0);
 }

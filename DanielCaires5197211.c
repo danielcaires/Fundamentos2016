@@ -81,8 +81,8 @@ int proximo_ponto(int teste, float h, float xk, float yk, float *xl, float *yl){
 	matriz[1][1] = derivada_numerica(gxy(xk, yk+h, teste), gxy(xk, yk-h, teste), h);
 
 	if(inverte_22(matriz,inversa)){
-		*xl = xk-(inversa[0][0]*fxy(xk, yk, teste)-inversa[0][1]*gxy(xk, yk, teste));
-		*yl = yk-(inversa[1][0]*fxy(xk, yk, teste)-inversa[1][1]*gxy(xk, yk, teste));
+		*xl = xk-((inversa[0][0]*fxy(xk, yk, teste))+(inversa[0][1]*gxy(xk, yk, teste)));
+		*yl = yk-((inversa[1][0]*fxy(xk, yk, teste))+(inversa[1][1]*gxy(xk, yk, teste)));
 
 		return(1);
 	} else {
@@ -94,17 +94,20 @@ int proximo_ponto(int teste, float h, float xk, float yk, float *xl, float *yl){
 
 int main(){
 	/*declara as variaveis*/
-  int teste, itmax, linhas, colunas, i, j;
+  int teste, itmax, linhas, colunas, i, j, k;
   float a, b, c, d, h, epsilon;
   FILE * arquivo;
   float varteste[2][2];
-  int cores[20][3] = {{0, 100, 80},{80, 0, 100},{100, 80, 0},{0, 80, 100},{100, 0, 80},{80, 100, 0},{0, 100, 100},{100, 0, 100},{100, 100, 0},
-  									{0, 80, 80},{80, 0, 80},{80, 80, 0},{0, 0, 80},{0, 80, 0},{80, 0, 0},{0, 0, 100},{0, 100, 0},{100, 0, 0},{200, 200, 200},
-  									{0, 80, 80}};
-  int indice;
-  float xk, yk, xl, yl;
+  int cores[20][3] = {{0, 100, 80},{80, 0, 100},{100, 80, 0},{0, 80, 100},{100, 0, 80},{80, 100, 0},{0, 100, 100},{100, 0, 100},
+  									{100, 100, 0},{0, 80, 80},{80, 0, 80},{80, 80, 0},{0, 0, 80},{0, 80, 0},{80, 0, 0},{0, 0, 100},{0, 100, 0},
+  									{100, 0, 0},{200, 200, 200},{0, 80, 80}};
+  int iteracoes=0;
+  float x, y, xk, yk, xl, yl;
   float passox, passoy;
   int retorno;
+  float raizes[20][2];
+  int solucoes=0;
+  int novasolucao;
 
 
   /*le o arquivo e preenche as variaveis*/
@@ -126,9 +129,72 @@ int main(){
   }
   
   fclose(arquivo)*/
- 	retorno = proximo_ponto(teste, h, a, d, &xl, &yl);
- 
-  printf("%f \n%f \n", xl, yl);
+  /*Cria o arquivo de imagem e preenche o cabecalio*/
+ 	arquivo = fopen("imagem.ppm","w");
+ 	fprintf(arquivo,"P3 %d %d 255\n", colunas, linhas);
 
+  /*itera a regiao do dominio a ser estudada*/
+  passox = (b-a)/colunas;
+  passoy = (d-c)/linhas;
+  for(i=0;i<linhas;i++){
+  	for(j=0;j<colunas;j++){
+  		iteracoes = 0;
+  		retorno = 1;
+		  x = a + i*(passox);
+		  y = d - j*(passoy);
+		  xk = x;
+		  yk = y;
+		  /*verifica se (xk,yk) ja esta proximo de alguma solucao*/
+		  for(k=0;k<solucoes;k++){
+		  	if(xk-raizes[k][0]<=2*passox && xk-raizes[k][0]>=-2*passox && yk-raizes[k][1]<=2*passoy && yk-raizes[k][1]>=-2*passoy){
+		  		fprintf(arquivo, "255 255 255 ");
+		  		retorno = 0;
+		  	}
+		  }
+			while(retorno==1){
+				retorno = proximo_ponto(teste, h, xk, yk, &xl, &yl);
+				iteracoes++;
+				if(retorno==1){
+					if(distancia(xk, yk, xl, yl)<epsilon){
+						/*Verifica se ja existe outro ponto que converge para esta solucao*/
+						novasolucao=1;
+						for(k=0;k<solucoes;k++){
+							if(distancia(xk, yk, raizes[k][0], raizes[k][1])<epsilon){
+								novasolucao=0;
+							}
+						}
+						if(novasolucao==1){
+							raizes[solucoes][0]=xl;
+							raizes[solucoes][1]=yl;
+							solucoes++;
+						}
+						fprintf(arquivo, "%d %d %d ", cores[k][0], cores[k][1], cores[k][2]);
+						retorno = 0;
+						/*printf("solucao aproximada (%f,%f) \n", xl, yl);*/
+					} else if(iteracoes>itmax) {
+						fprintf(arquivo, "0 0 0 ");
+						retorno = 0;
+						printf("O ponto nao converge em %d iteracoes \n", itmax);
+					} else if(xl<a || xl>b || yl<c || yl>d){
+						fprintf(arquivo, "0 0 0 ");
+						retorno = 0;
+						/*printf("O ponto nao converge dentro do dominio determinado \n");*/
+						/*printf("a=%f, b=%f, c=%f, d=%f, xl=%f, yl=%f \n",a,b,c,d,xl,yl);*/
+					} else {
+						xk = xl;
+						yk = yl;
+					}
+				} else {
+					fprintf(arquivo, "0 0 0 ");
+					/*printf("O ponto nao converge \n");*/
+				}
+			}
+		}
+	}
+	printf("%d solucoes \n", solucoes);
+	for(k=0;k<solucoes;k++){
+	  printf("%f            %f \n", raizes[k][0], raizes[k][1]);
+	  
+	}
   return(0);
 }

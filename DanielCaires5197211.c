@@ -147,6 +147,7 @@ int main(){
 						for(k=0;k<solucoes;k++){
 							if(distancia(xk, yk, raizes[k][0], raizes[k][1])<epsilon){
 								novasolucao=0;
+								break;
 							}
 						}
 						if(novasolucao==1){
@@ -181,8 +182,7 @@ int main(){
 
 	printf("%d solucoes \n", solucoes);
 	for(k=0;k<solucoes;k++){
-	  printf("%f            %f \n", raizes[k][0], raizes[k][1]);
-	  
+	  printf("%f            %f \n", raizes[k][0], raizes[k][1]);	  
 	}
   return(0);
 }

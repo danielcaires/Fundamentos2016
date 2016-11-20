@@ -93,12 +93,12 @@ int proximo_ponto(int teste, float h, float xk, float yk, float *xl, float *yl){
 int main(){
 	/*declara as variaveis*/
   int teste, itmax, linhas, colunas, i, j, k;
-  float a, b, c, d, h, epsilon;
+  float a, b, c, d, h, epsilon, lambda;
   FILE * arquivo;
   float varteste[2][2];
-  int cores[20][3] = {{0, 100, 80},{80, 0, 100},{100, 80, 0},{0, 80, 100},{100, 0, 80},{80, 100, 0},{0, 100, 100},{100, 0, 100},
-  									{100, 100, 0},{0, 80, 80},{80, 0, 80},{80, 80, 0},{0, 0, 80},{0, 80, 0},{80, 0, 0},{0, 0, 100},{0, 100, 0},
-  									{100, 0, 0},{200, 200, 200},{0, 80, 80}};
+  int cores[20][3] = {{0, 250, 200},{200, 0, 250},{250, 200, 0},{0, 200, 250},{250, 0, 200},{200, 250, 0},{0, 250, 250},{250, 0, 250},
+  									{250, 250, 0},{0, 200, 200},{200, 0, 200},{200, 200, 0},{0, 0, 200},{0, 200, 0},{200, 0, 0},{0, 0, 250},{0, 250, 0},
+  									{250, 0, 0},{250, 250, 250},{0, 200, 200}};
   int iteracoes=0;
   float x, y, xk, yk, xl, yl;
   float passox, passoy;
@@ -145,17 +145,19 @@ int main(){
 						/*Verifica se ja existe outro ponto que converge para esta solucao*/
 						novasolucao=1;
 						for(k=0;k<solucoes;k++){
-							if(distancia(xk, yk, raizes[k][0], raizes[k][1])<epsilon){
+							if(distancia(xl, yl, raizes[k][0], raizes[k][1])<epsilon){
 								novasolucao=0;
 								break;
 							}
 						}
 						if(novasolucao==1){
+
 							raizes[solucoes][0]=xl;
 							raizes[solucoes][1]=yl;
 							solucoes++;
 						}
-						fprintf(arquivo, "%d %d %d ", cores[k][0], cores[k][1], cores[k][2]);
+						lambda = ((float)itmax-(float)iteracoes)/(float)itmax; /*ATENCAO - verificar se vai usar*/
+						fprintf(arquivo, "%d %d %d ", (int)(cores[k][0]*lambda), (int)(cores[k][1]*lambda), (int)(cores[k][2]*lambda));
 						retorno = 0;
 						/*printf("solucao aproximada (%f,%f) \n", xl, yl);*/
 					} else if(iteracoes>itmax) {

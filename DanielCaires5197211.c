@@ -87,9 +87,7 @@ int proximo_ponto(int teste, float h, float xk, float yk, float *xl, float *yl){
 		return(1);
 	} else {
 		return(0);
-	}
-	
-
+	}	
 }
 
 int main(){
@@ -108,27 +106,14 @@ int main(){
   float raizes[20][2];
   int solucoes=0;
   int novasolucao;
+  int contator; /*ATENCAO - apagar*/
 
 
   /*le o arquivo e preenche as variaveis*/
   arquivo = fopen("entrada.txt","r");
   fscanf(arquivo, "%d %f %f %f %f %e %d %e %d %d", &teste, &a, &b, &c, &d, &h, &itmax, &epsilon, &linhas, &colunas);
   fclose(arquivo);
-
-  /*Cria o arquivo de imagem e preenche o cabecalio
- 	arquivo = fopen("imagem.ppm","w");
- 	fprintf(arquivo,"P3 %d %d 255\n", colunas, linhas);
- 	
-  /*itera a regiao do dominio a ser estudada
-  for(i=0;i<linhas;i++){
-  	for(j=0;j<colunas;j++){
-  		/*indice = (i/(linhas/20))%20;    /*---ATENCAO--- Teste de cores, apagar 
-  		fprintf(arquivo, "%d %d %d ", cores[indice][0], cores[indice][1], cores[indice][2]);
-  		xk = a + (b-a)
-  	}
-  }
   
-  fclose(arquivo)*/
   /*Cria o arquivo de imagem e preenche o cabecalio*/
  	arquivo = fopen("imagem.ppm","w");
  	fprintf(arquivo,"P3 %d %d 255\n", colunas, linhas);
@@ -136,8 +121,8 @@ int main(){
   /*itera a regiao do dominio a ser estudada*/
   passox = (b-a)/colunas;
   passoy = (d-c)/linhas;
-  for(i=0;i<linhas;i++){
-  	for(j=0;j<colunas;j++){
+  for(j=0;j<colunas;j++){
+  	for(i=0;i<linhas;i++){
   		iteracoes = 0;
   		retorno = 1;
 		  x = a + i*(passox);
@@ -149,6 +134,7 @@ int main(){
 		  	if(xk-raizes[k][0]<=2*passox && xk-raizes[k][0]>=-2*passox && yk-raizes[k][1]<=2*passoy && yk-raizes[k][1]>=-2*passoy){
 		  		fprintf(arquivo, "255 255 255 ");
 		  		retorno = 0;
+		  		break;
 		  	}
 		  }
 			while(retorno==1){
@@ -191,6 +177,8 @@ int main(){
 			}
 		}
 	}
+	fclose(arquivo);
+
 	printf("%d solucoes \n", solucoes);
 	for(k=0;k<solucoes;k++){
 	  printf("%f            %f \n", raizes[k][0], raizes[k][1]);

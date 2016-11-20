@@ -112,9 +112,9 @@ int main(){
   float a, b, c, d, h, epsilon, lambda; /*Vairaveis a serem atribuidas pelo arquivo de entrada*/
   int i, j, k; /*Variaveis auxiliares utilizadas na iteracao de listas ou matrizes*/
   FILE * arquivo;
-  int cores[20][3] = {{0, 250, 200},{200, 0, 250},{250, 200, 0},{0, 200, 250},{250, 0, 200},{200, 250, 0},{0, 250, 250},{250, 0, 250},
-  									{250, 250, 0},{0, 200, 200},{200, 0, 200},{200, 200, 0},{0, 0, 200},{0, 200, 0},{200, 0, 0},{0, 0, 250},{0, 250, 0},
-  									{250, 0, 0},{250, 250, 250},{0, 200, 200}}; /*Lista com o codigo das cores*/
+  int cores[20][3] = {{0, 250, 200},{200, 0, 250},{250, 200, 0},{200, 250, 0},{250, 0, 200},{0, 200, 250},{0, 250, 100},{100, 0, 250},
+  									{250, 100, 0},{0, 200, 200},{200, 0, 200},{200, 200, 0},{250, 250, 200},{250, 200, 250},{200, 250, 250},{0, 0, 250},{0, 250, 0},
+  									{250, 0, 0},{200, 200, 200},{250, 200, 200}}; /*Lista com o codigo das cores*/
   int iteracoes=0; 
   float xk, yk, xl, yl; /*xk e yk sao as coordenadas do passo atual de iteracao e xl e yl as do proximo passo*/
   float passox, passoy; /*determinam a distancia entre os pontos iniciais das iteracoes*/

@@ -181,10 +181,11 @@ int main(){
 		}
 	}
 	fclose(arquivo);
-
-	printf("%d solucoes \n", solucoes);
+	printf("Daniel Oliveira Caires - NUSP: 5197211\n");
+	printf("Teste %d feito no intervalo [%f,%f]x[%f,%f] usando %d x %d pontos e precisao %f \n",teste, a, b, c, d, colunas, linhas, epsilon);
+	printf("%d raizes encontradas:\n", solucoes);
 	for(k=0;k<solucoes;k++){
-	  printf("%f            %f \n", raizes[k][0], raizes[k][1]);	  
+	  printf("(%f, %f) - Cor:(%d, %d, %d) \n", raizes[k][0], raizes[k][1], cores[k][0], cores[k][1], cores[k][2]);	  
 	}
   return(0);
 }
